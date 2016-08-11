@@ -1,0 +1,81 @@
+body{
+	padding-top: 70px;
+}
+
+section.home{
+	background: #ddd;
+	color: #222;
+	width: 1200px;
+	margin: auto;
+}
+
+
+@media(max-width: 600px){
+
+	section.home{
+		width:550px;
+	}
+	
+}
+
+
+.side{
+	padding: 20px;
+	margin: auto;
+}
+
+.side h3{
+	text-align: center;
+}
+
+.main{
+
+}
+
+#logbook{
+	height: 470px;
+	background: #444;
+	color: lime;
+	padding: 20px;
+	overflow: scroll;
+}
+
+#typer{
+	text-align: center;
+	background: #E4FF7A;
+	
+	width: 300px;
+	height: 70px;
+	margin: auto;
+	margin-bottom: 50px;
+}
+
+#setting{
+	background: #fff;
+	
+	width: 300px;
+	padding: 20px;
+	margin: auto;
+}
+
+#chatto{
+	width: 500px;
+}
+
+.chatballoon{
+	background: rgba(255,255,255,0.2) !important;   /* 10% opaque red */
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 10px;
+
+}
+
+.panel{
+	margin : 0px !important;
+}
+
+#userkey{
+	font-size: 40px;
+	font-weight: bold;
+}
+

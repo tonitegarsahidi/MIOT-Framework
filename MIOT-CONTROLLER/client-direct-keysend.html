@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>MIOT CLIENT FRONTEND</title>
+
+    <script type="text/javascript">
+
+      var myid = '[ HUMAN ]';
+      var systemname ='[ SYSTEM MIOT ]';
+
+      //predefined variable, may be changed with form
+      var serveraddress = 'localhost';
+      var serverport = '1337';
+      var wsid = 'user1';
+      var wsgroup = 'miot';
+
+
+      //variabel hold for interval...
+      var globalinterval;
+
+      //for websocket
+      var connection;
+         // if user is running mozilla then use it's built-in WebSocket
+    window.WebSocket = window.WebSocket || window.MozWebSocket;
+
+        // my color assigned by the server
+    var myColor = false;
+    // my name sent to the server
+    var myName = false;
+
+
+
+
+    </script>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container container-fluid">
+        <div class="navbar-header">
+            <h3>MIOT CLIENT</h3>            
+          
+        </div>
+      </div>
+    </nav>
+
+
+    <section class="home">
+      <div class="row">
+
+
+            <!-- =============== THIS IS THE SIDE BAR =====================-->
+        <div class="col-md-4 side">
+          <h3>Control Here</h3>
+
+          <div id="setting">
+
+
+            <form class="form-horizontal" id="wssetting" action="#">
+              <div class="form-group">
+                <label for="wsaddress">WebSocket Server Address</label>
+                <input type="text" class="form-control" id="wsaddress" placeholder="x.x.x.x" value="localhost">
+              </div>
+              <div class="form-group">
+                <label for="wsport">Port</label>
+                <input type="number" class="form-control" id="wsport" placeholder="Port Number" value="1337">
+              </div>
+              
+              <div class="form-group">
+                <label for="wsid">User Id</label>
+                <input type="text" class="form-control" id="wsid" placeholder="Port Number" value="raudhah">
+              </div>
+
+              <div class="form-group">
+                <label for="wsgroup">Group</label>
+                <input type="text" class="form-control" id="wsgroup" placeholder="Group Name" value="miot">
+              </div>
+
+              <button type="submit" class="btn btn-success" id="wsconnectbutton"><strong>Connect!</strong></button>
+            </form>
+
+            <div id="wsdisconnect">
+              Server is Running...! <br/>
+              <button type="submit" class="btn btn-danger" id="wsdisconnectbutton"><strong>Disconnect!
+              </strong></button>
+            </div>  
+
+          </div>
+
+
+
+          <div id="typer">
+            <div id="typer-info">
+              This is what you press <br/>
+              <span id="userkey">A</span>
+              <br/>
+            </div>
+
+            <button class="btn btn-primary" id="randomstart">
+            <strong>Dummy Test : Random Start!</strong>
+            </button>
+
+            <button class="btn btn-danger" id="randomstop">
+              <strong>Dummy Test : Random Stop!</strong>
+            </button>
+          </div>
+
+        
+
+
+          
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- =============== THIS IS THE MAIN PART =====================-->
+        <div class="col-md-8 main">
+
+          <div id="logbook">
+            <h4>MIOT Controller - </h4>
+          </div>
+
+          <form class="form-inline" id="chat-input">
+            <div class="form-group">
+              <label for="chatto">Name</label>
+              <input type="text" class="form-control" id="chatto" placeholder="Type messages here">
+            </div>
+            <button class="btn btn-default" onclick="processForm()">Send!</button>
+          </form>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/miot.js"></script>
+
+    <script type="text/javascript">
+
+    //ALL CONSTRUCTOR PLEASE PUT IN HERE
+    $(document).ready(function(){
+
+      $("#userkey").html("ok");
+
+      
+
+      //hide everything here
+      $('#wsdisconnect').hide();
+      $('#randomstop').hide();
+
+
+      $('#wsaddress').focus();
+
+
+    
+
+
+    });
+
+    $('#chatto').keypress(function (e) {
+      if (e.which == 13) {
+        processForm();
+
+        
+        return false;    //<---- Add this line
+      }
+    });
+
+
+    //ON KEYPRESS ANY KEYS
+    $(document).keydown(
+      function(event){
+        whichkeys(event,"#userkey");
+        
+        if(connection != null){
+	         var data = String.fromCharCode(event.which);
+	         sendDataWS("message", data);
+        }
+    });
+
+
+
+    //========= on button connect clicked ===========
+      $("#wsconnectbutton").click(function() {
+          serveraddress = $("#wsaddress").val();
+          serverport = $("#wsport").val();
+          wsid = $("#wsid").val();
+
+          var text = systemname + '>> Connecting to WebSocket Server ' + serveraddress +" on " + serverport + " using name " + wsid + " @"+ wsgroup;
+          writeLogbook(text);
+          
+          //FUNCTION TO connect to WEBSOCKET server is here
+          connectWS();
+
+      });
+
+
+    //========= on button disconnect clicked ===========
+      $("#wsdisconnectbutton").click(function() {
+          var text = systemname + ' xxx DISCONNECTIONG FROM ' + serveraddress +" : " + serverport + " using name " + wsid;
+          
+          writeLogbook(text);
+
+          //FUNCTION TO DISconnect to WEBSOCKET server is here
+          disconnectWS();
+      });      
+
+
+
+      
+    </script>
+
+  </body>
+</html>

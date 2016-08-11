@@ -1,0 +1,19 @@
+{
+  "name": "serverws.js",
+  "version": "0.1.0",
+  "description": "this program will run a webserver socket for ease",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "toni tegar sahidi",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "mysql": "^2.11.1",
+    "websocket": "^1.0.23"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "websocket"
+  ]
+}
