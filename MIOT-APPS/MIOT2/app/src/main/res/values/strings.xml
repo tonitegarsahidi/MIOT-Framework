@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MIOT2</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_server_config">ServerConfig</string>
+    <string name="title_activity_bluetooth_config">BluetoothConfig</string>
+    <string name="title_activity_gpsconfig">GPSConfig</string>
+</resources>
